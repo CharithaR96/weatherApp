@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/city_forecast.dart';
 
 var _controller = TextEditingController();
 var searchList = [];
@@ -19,60 +20,35 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-        child: Column(
-          children: [
-            //Search Bar
-            SearchBar(
+      body: Column(
+        children: [
+          //Search Bar
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: SearchBar(
               hintText: 'Search',
               leading: Icon(
                 Icons.search,
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            //Search list
-            Row(
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          //Search list
+          SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
               children: [
-                SizedBox(
-                  height: 120,
-                  width: MediaQuery.of(context).size.width,
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Colombo',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Icon(
-                            Icons.cloud,
-                            size: 30,
-                          ),
-                          Text(
-                            '32 F',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                CityForecast(
+                  location: 'Colombo',
+                  value: '37',
+                  weatherIcon: Icons.sunny,
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
