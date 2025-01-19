@@ -1,11 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:weather_app/city_forecast.dart';
+
+import 'keys.dart';
 
 var _controller = TextEditingController();
 var searchList = [];
+var forecastLocation = '';
+var forecastValue = 0.0;
+var forecastIcon = Icons.shape_line;
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    getCurrentWeather();
+  }
+
+  Future getCurrentWeather() async {
+    try {
+      String cityName = 'London';
+      final res = await http.get(
+        Uri.parse(
+            'https://api.weatherapi.com/v1/current.json?key=$apiKey&q=$cityName&aqi=no'),
+      );
+
+      if (res.statusCode == 200) {
+        print(res.body);
+      } else {
+        print(res.statusCode);
+      }
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
