@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather_app/city_forecast.dart';
@@ -6,9 +8,10 @@ import 'keys.dart';
 
 var _controller = TextEditingController();
 var searchList = [];
-var forecastLocation = '';
-var forecastValue = 0.0;
-var forecastIcon = Icons.shape_line;
+String forecastLocation = '';
+double forecastValue = 0.0;
+IconData forecastIcon = Icons.shape_line;
+bool isLoading = false;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,20 +24,36 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    //Network call to get weather data
     getCurrentWeather();
   }
 
   Future getCurrentWeather() async {
     try {
+      setState(() {
+        isLoading = true;
+      });
       String cityName = 'London';
       final res = await http.get(
         Uri.parse(
             'https://api.weatherapi.com/v1/current.json?key=$apiKey&q=$cityName&aqi=no'),
       );
+      //Getting data from network call
+      final data = jsonDecode(res.body);
 
       if (res.statusCode == 200) {
-        print(res.body);
+        setState(() {
+          forecastValue = (data['current']['temp_c']);
+          forecastLocation = (data['location']['name']);
+          // forecastIcon = (data['current']['condition']['icon']);
+
+          isLoading = false;
+        });
       } else {
+        setState(() {
+          isLoading = false;
+        });
         print(res.statusCode);
       }
     } catch (e) {
@@ -75,11 +94,14 @@ class _HomePageState extends State<HomePage> {
             scrollDirection: Axis.vertical,
             child: Column(
               children: [
-                CityForecast(
-                  location: 'Colombo',
-                  value: '37',
-                  weatherIcon: Icons.sunny,
-                ),
+                //Show loading
+                isLoading
+                    ? CircularProgressIndicator()
+                    : CityForecast(
+                        location: forecastLocation,
+                        value: forecastValue,
+                        weatherIcon: Icons.sunny,
+                      ),
               ],
             ),
           ),

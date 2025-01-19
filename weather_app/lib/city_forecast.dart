@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CityForecast extends StatelessWidget {
   //Constructor
   final String location;
-  final String value;
+  final double value;
   final IconData weatherIcon;
 
   const CityForecast({
