@@ -7,6 +7,7 @@ import 'package:weather_app/city_forecast.dart';
 import 'keys.dart';
 
 var _controller = TextEditingController();
+String searchLocation = '';
 var searchList = [];
 String forecastLocation = '';
 double forecastValue = 0.0;
@@ -26,7 +27,9 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     //Network call to get weather data
-    getCurrentWeather();
+    if (searchLocation.isNotEmpty) {
+      getCurrentWeather();
+    }
   }
 
   Future getCurrentWeather() async {
@@ -34,10 +37,9 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         isLoading = true;
       });
-      String cityName = 'London';
       final res = await http.get(
         Uri.parse(
-            'https://api.weatherapi.com/v1/current.json?key=$apiKey&q=$cityName&aqi=no'),
+            'https://api.weatherapi.com/v1/current.json?key=$apiKey&q=$searchLocation&aqi=no'),
       );
       //Getting data from network call
       final data = jsonDecode(res.body);
@@ -53,8 +55,8 @@ class _HomePageState extends State<HomePage> {
       } else {
         setState(() {
           isLoading = false;
+          _showDialog(context, (data['error']['message']));
         });
-        print(data['error']['message']);
       }
     } catch (e) {
       setState(() {
@@ -62,6 +64,26 @@ class _HomePageState extends State<HomePage> {
       });
       throw e.toString();
     }
+  }
+
+  Future _showDialog(BuildContext context, String errorMessage) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Alert'),
+          content: Text(errorMessage),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -82,11 +104,20 @@ class _HomePageState extends State<HomePage> {
           //Search Bar
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: SearchBar(
-              hintText: 'Search',
-              leading: Icon(
-                Icons.search,
+            child: TextField(
+              textInputAction: TextInputAction.search,
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: 'Search',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
               ),
+              onSubmitted: (String value) {
+                setState(() {
+                  searchLocation = _controller.text;
+                  getCurrentWeather();
+                });
+              },
             ),
           ),
           const SizedBox(
