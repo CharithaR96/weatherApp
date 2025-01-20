@@ -8,7 +8,7 @@ import 'keys.dart';
 
 var _controller = TextEditingController();
 String searchLocation = '';
-var searchList = [];
+Set<String> searchList = {};
 String forecastLocation = '';
 double forecastValue = 0.0;
 String forecastIcon = '';
@@ -50,6 +50,8 @@ class _HomePageState extends State<HomePage> {
           forecastLocation = (data['location']['name']);
           forecastIcon = (data['current']['condition']['icon']);
 
+          //Adding to the location list
+          searchList.add(forecastLocation);
           isLoading = false;
         });
       } else {
@@ -131,10 +133,15 @@ class _HomePageState extends State<HomePage> {
                 //Show loading
                 isLoading
                     ? CircularProgressIndicator()
-                    : CityForecast(
-                        location: forecastLocation,
-                        value: forecastValue,
-                        weatherIcon: ('https:$forecastIcon'),
+                    : Column(
+                        children: [
+                          for (var i = 0; i < searchList.length; i++)
+                            CityForecast(
+                              location: forecastLocation,
+                              value: forecastValue,
+                              weatherIcon: ('https:$forecastIcon'),
+                            ),
+                        ],
                       ),
               ],
             ),
