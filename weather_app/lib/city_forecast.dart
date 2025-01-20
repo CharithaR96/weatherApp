@@ -4,7 +4,7 @@ class CityForecast extends StatelessWidget {
   //Constructor
   final String location;
   final double value;
-  final IconData weatherIcon;
+  final String weatherIcon;
 
   const CityForecast({
     super.key,
@@ -31,9 +31,9 @@ class CityForecast extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Icon(
+              Image.network(
                 weatherIcon,
-                size: 30,
+                height: 40,
               ),
               Text(
                 ('$value°C'),

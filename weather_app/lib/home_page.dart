@@ -10,7 +10,7 @@ var _controller = TextEditingController();
 var searchList = [];
 String forecastLocation = '';
 double forecastValue = 0.0;
-IconData forecastIcon = Icons.shape_line;
+String forecastIcon = '';
 bool isLoading = false;
 
 class HomePage extends StatefulWidget {
@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           forecastValue = (data['current']['temp_c']);
           forecastLocation = (data['location']['name']);
-          // forecastIcon = (data['current']['condition']['icon']);
+          forecastIcon = (data['current']['condition']['icon']);
 
           isLoading = false;
         });
@@ -54,9 +54,12 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           isLoading = false;
         });
-        print(res.statusCode);
+        print(data['error']['message']);
       }
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       throw e.toString();
     }
   }
@@ -100,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                     : CityForecast(
                         location: forecastLocation,
                         value: forecastValue,
-                        weatherIcon: Icons.sunny,
+                        weatherIcon: ('https:$forecastIcon'),
                       ),
               ],
             ),
