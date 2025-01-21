@@ -42,6 +42,8 @@ class WeatherProvider extends ChangeNotifier {
         searchListLocations.add(forecastLocation);
         searchListValues.add(forecastValue);
         searchListIcons.add(forecastIcon);
+      } else {
+        showNoDataDialog(context, data['error']['message']);
       }
     } catch (e) {
       showNoDataDialog(
