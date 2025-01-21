@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/home_page.dart';
 
 class CityForecast extends StatelessWidget {
   //Constructor
   final String location;
   final double value;
   final String weatherIcon;
+  final String indexItem;
 
   const CityForecast({
     super.key,
     required this.location,
     required this.value,
     required this.weatherIcon,
+    required this.indexItem,
   });
 
   @override
@@ -28,7 +31,7 @@ class CityForecast extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      flex: 15,
+                      flex: 10,
                       child: Column(
                         children: [
                           Text(
@@ -40,7 +43,7 @@ class CityForecast extends StatelessWidget {
                             ),
                           ),
                           Image.network(
-                            weatherIcon,
+                            ('https:$weatherIcon'),
                             height: 40,
                           ),
                           Text(
@@ -56,16 +59,15 @@ class CityForecast extends StatelessWidget {
                     ),
                     Expanded(
                       flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.delete,
-                          ),
-                          onPressed: () {
-                            //delete cities
-                          },
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.delete,
                         ),
+                        onPressed: () {
+                          //delete cities
+                          searchListLocations.remove(int.tryParse(indexItem));
+                          print(indexItem);
+                        },
                       ),
                     ),
                   ],
