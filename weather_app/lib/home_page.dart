@@ -112,59 +112,52 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: Wrap(
+      body: Column(
         children: [
-          Column(
-            children: [
-              //Search Bar
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: TextField(
-                  textInputAction: TextInputAction.search,
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  onSubmitted: (String value) {
-                    setState(() {
-                      searchLocation = _controller.text;
-                      getCurrentWeather();
-                    });
-                  },
-                  //New
-                  onChanged: (value) {},
-                ),
+          //Search Bar
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: TextField(
+              textInputAction: TextInputAction.search,
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: 'Search',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
               ),
-
-              const SizedBox(
-                height: 10,
-              ),
-              //Search list
-              Column(
-                children: [
-                  //Show loading
-                  isLoading
-                      ? CircularProgressIndicator()
-                      : ListView(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          children: [
-                            for (var i = 0; i < searchListLocations.length; i++)
-                              CityForecast(
-                                value: searchListValues.elementAt(i),
-                                location: searchListLocations.elementAt(i),
-                                weatherIcon: searchListIcons.elementAt(i),
-                                indexItem: i.toString(),
-                              ),
-                          ],
-                        ),
-                ],
-              ),
-            ],
+              onSubmitted: (String value) {
+                setState(() {
+                  searchLocation = _controller.text;
+                  getCurrentWeather();
+                });
+              },
+              //New
+              onChanged: (value) {},
+            ),
           ),
+
+          const SizedBox(
+            height: 10,
+          ),
+          //Search list
+          isLoading
+              ? CircularProgressIndicator()
+              : Expanded(
+                  child: ListView(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    children: [
+                      for (var i = 0; i < searchListLocations.length; i++)
+                        CityForecast(
+                          value: searchListValues.elementAt(i),
+                          location: searchListLocations.elementAt(i),
+                          weatherIcon: searchListIcons.elementAt(i),
+                          indexItem: i.toString(),
+                        ),
+                    ],
+                  ),
+                ),
         ],
       ),
     );
