@@ -44,9 +44,30 @@ class WeatherProvider extends ChangeNotifier {
         searchListIcons.add(forecastIcon);
       }
     } catch (e) {
+      showNoDataDialog(
+          context, 'Failed to fetch weather data. Please try again.');
+    } finally {
+      //listen to the deleted data
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  //Alert for errors
+  void showNoDataDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   void removeForecast(String location, double value, String icon) {
